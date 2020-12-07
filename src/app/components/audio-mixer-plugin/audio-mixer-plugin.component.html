@@ -1,0 +1,157 @@
+<mat-grid-list cols="3" rowHeight="2:1">
+    <mat-grid-tile>
+      <button type="button" mat-raised-button color="accent" (click)="fileInput.click()">
+        <mat-icon>attach_file</mat-icon>
+        Choose audio files...
+      </button>
+      <input #fileInput (change)="handleFiles($event.target.files)" hidden type="file" name="audio input" multiple
+        accept="audio/*" id="audio_input">
+    </mat-grid-tile>
+  
+    <mat-grid-tile colspan="1">
+      <mat-list role="list">
+        <mat-list-item role="listitem" *ngFor="let file of filesAsArray()">
+          {{file.name}}
+          <button (click)="onPlayButtonPressed(file.url)" mat-icon-button color="accent" aria-label="Play song">
+            <mat-icon>play_circle_filled</mat-icon>
+          </button>
+        </mat-list-item>
+      </mat-list>
+    </mat-grid-tile>
+  
+    <mat-grid-tile>
+      <mat-card class="audio-mixer-card">
+        <mat-card-header>
+          <mat-card-title>Now Playing</mat-card-title>
+          <mat-card-subtitle>{{nowPlayingName}}</mat-card-subtitle>
+        </mat-card-header>
+  
+        <mat-card-actions>
+          <div class="card-action">
+            <ng-container *ngIf="isPlaying; else elseTemplate">
+              <button mat-raised-button color="accent" (click)="onPauseButtonPressed()">
+                <mat-icon>pause</mat-icon>
+              </button>
+            </ng-container>
+            <ng-template #elseTemplate>
+              <button mat-raised-button color="accent" (click)="onResumeButtonPressed()">
+                <mat-icon>play_arrow</mat-icon>
+              </button>
+            </ng-template>
+          </div>
+          <div class="card-action">
+            <mat-slider #volumeSlider thumbLabel (change)="onVolumeSliderChange(volumeSlider.value)" value="1" min="0"
+              max="1" step="0.1"></mat-slider>
+          </div>
+        </mat-card-actions>
+      </mat-card>
+    </mat-grid-tile>
+  
+    <mat-grid-tile colspan="3">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Dynamic Compression</mat-card-title>
+          <mat-card-subtitle>Adjust the dynamic compression of the audio</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-actions>
+          <div class="card-action">
+              Threshold (in dB)
+              <mat-slider thumbLabel #DCThreshold (change)="onDCThresholdChange(DCThreshold.value)" value="1" min="0"
+                max="100" step="1">
+              </mat-slider>
+          </div>
+  
+          <div class="card-action">
+              Attack (in seconds)
+              <mat-slider thumbLabel #DCAttack (change)="onDCAttackChange(DCAttack.value)" value="1" min="0" max="10"
+                step="0.1">
+              </mat-slider>
+          </div>
+  
+          <div class="card-action">
+              Release (in seconds)
+              <mat-slider thumbLabel #DCRelease (change)="onDCReleaseChange(DCRelease.value)" value="1" min="0" max="10"
+                step="0.1">
+              </mat-slider>
+          </div>
+        </mat-card-actions>
+      </mat-card>
+    </mat-grid-tile>
+  
+    <mat-grid-tile colspan="1">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Low Pass filter</mat-card-title>
+          <mat-card-subtitle>Cuts out frequencies higher than the threshold</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-actions>
+          <div class="card-action">
+            <div mat-line>
+              Threshold (in Hz)
+            </div>
+            <div mat-line>
+              <mat-slider thumbLabel #lowPass (change)="onLowPassChange(lowPass.value)" value="1000" min="50" max="10000"
+                step="1">
+              </mat-slider>
+            </div>
+          </div>
+        </mat-card-actions>
+      </mat-card>
+    </mat-grid-tile>
+  
+    <mat-grid-tile colspan="1">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Band Pass filter</mat-card-title>
+          <mat-card-subtitle>Cuts out the frequencies outside of the range</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-actions>
+          <div class="card-action">
+            <div mat-line>
+              Center Freq. (in Hz)
+            </div>
+            <div mat-line>
+              <mat-slider thumbLabel #bandPassCenter (change)="onBandPassCenterChange(bandPassCenter.value)" value="1000"
+                min="50" max="10000" step="1">
+              </mat-slider>
+            </div>
+          </div>
+  
+          <div class="card-action">
+            <div mat-line>
+              Range (in Hz)
+            </div>
+            <div mat-line>
+              <mat-slider thumbLabel #bandPassRange (change)="onBandPassRangeChange(bandPassRange.value)" value="1000"
+                min="50" max="10000" step="1">
+              </mat-slider>
+            </div>
+          </div>
+        </mat-card-actions>
+      </mat-card>
+    </mat-grid-tile>
+  
+    <mat-grid-tile colspan="1">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>High Pass filter</mat-card-title>
+          <mat-card-subtitle>Cuts out frequencies lower than the threshold</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-actions>
+          <div class="card-action">
+            <div mat-line>
+              Threshold (in Hz)
+            </div>
+            <div mat-line>
+              <mat-slider thumbLabel #highPass (change)="onHighPassChange(highPass.value)" value="1000" min="50" max="10000"
+                step="1">
+              </mat-slider>
+            </div>
+          </div>
+        </mat-card-actions>
+      </mat-card>
+    </mat-grid-tile>
+  
+    
+  </mat-grid-list>
+  
