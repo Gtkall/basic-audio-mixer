@@ -81,6 +81,7 @@ export class AudioMixerPluginComponent implements OnInit {
   async handleFiles(files: FileList): Promise<void> {
     this.canDisplay = false;
     if (files.length) {
+      // handle files and push them to Map
       // tslint:disable-next-line: prefer-for-of
       for (let i = 0; i < files.length; i++) {
         const name = files[i].name;
